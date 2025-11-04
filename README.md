@@ -12,18 +12,18 @@ Keep in mind you also need to configure your MCP server and tools to read from y
 
 ```
 GOOGLE_GENAI_USE_VERTEXAI=1
-GOOGLE_CLOUD_PROJECT=
-GOOGLE_CLOUD_LOCATION=
+GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
+GOOGLE_CLOUD_LOCATION="YOUR_PROJECT_LOCATION"
 
-BIGQUERY_PROJECT=
-BIGQUERY_LOCATION=
+BIGQUERY_PROJECT="YOUR_BQ_ID"
+BIGQUERY_LOCATION="YOUR_BQ_LOCATION"
 
-AGENT_ENGINE_ID="Requires having deployed your agent to Agent Engine"
+AGENT_ENGINE_ID="Only available after deploying agent to Agent Engine"
 
 OAUTH_CLIENT_ID="Requires setting up an OAuth profile in GCP"
 OAUTH_CLIENT_SECRET="Requires setting up an OAuth profile in GCP"
 
-MCP_URL="Required deploying your MCP server to Cloud Run"
+MCP_URL="Requires deploying your MCP server to Cloud Run"
 ```
 
 
@@ -79,19 +79,25 @@ Other tools:
 
 ## Running the Agent
 
-To interact with the agent, call ADK's web server via 
+To interact with the agent, first authenticate to GCP via
+
+```bash
+gcloud auth application-default login
+```
+
+Then call ADK's web server via 
 
 ```bash
 adk web 
 ```
 
-Once deployed to Agent Engine, invoke via 
+(If deployed to Agent Engine) Invoke Agent Engine instance using 
 
 ```bash
 adk web --session_service_uri=agentengine://projects/PROJECT_ID/locations/LOCATION_ID/reasoningEngines/REASONING_ENGINE_ID
 ```
 
-Leverage Agent Engine Memory Bank using 
+(If deployed to Agent Engine) Leverage Agent Engine Memory Bank using 
 
 ```bash
 adk web /PATH/TO/YOUR/AGENT/FOLDER --memory_service_uri="agentengine://REASONING_ENGINE_ID"
