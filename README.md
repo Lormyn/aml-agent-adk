@@ -28,7 +28,7 @@ MCP_URL="Requires deploying your MCP server to Cloud Run"
 
 
 
-## Agents
+# Agents
 
 The system consists of two main agents:
 
@@ -51,7 +51,7 @@ The `sar_agent` is a specialized agent focused on the creation of SARs. Its work
 
 
 
-## Tools
+# Tools
 
 The agents have access to a variety of tools to perform their functions. These tools are defined in `mcp_server/tools.yaml`.
 
@@ -77,7 +77,7 @@ Other tools:
 
 
 
-## Running the Agent
+# Running the Agent
 
 To interact with the agent, first authenticate to GCP via
 
@@ -105,7 +105,7 @@ adk web /PATH/TO/YOUR/AGENT/FOLDER --memory_service_uri="agentengine://REASONING
 
 
 
-## Deployment
+# Deployment
 
 To deploy the agent to Agent Engine, use the following command:
 
@@ -116,7 +116,7 @@ adk deploy agent_engine --project=<YOUR_PROJECT_ID> --region=<YOUR_REGION> --sta
 
 
 
-### Examples
+# Examples
 Ask it to "investigate user U-HR-005" or "show me the top 5 riskiest users". 
 
 If you want to draft a SAR, you can instruct the agent to do so, and it will delegate the task to the `sar_agent`.
