@@ -6,7 +6,9 @@ This project implements an AI-powered assistant for Anti-Money Laundering (AML) 
 
 # Setup
 
-To run the agent, you will need to set the following environment variables. You can create a `.env` file in the `aml_agent` directory to store these variables. Keep in mind you need to configure your MCP server and tools to read from your BigQuery dataset & tables.
+Create a `.env` file in the `aml_agent` directory to store the below variables (which you need to set). 
+
+Keep in mind you also need to configure your MCP server and tools to read from your BigQuery dataset & tables in order for the agent to run.
 
 ```
 GOOGLE_GENAI_USE_VERTEXAI=1
@@ -49,7 +51,7 @@ The `sar_agent` is a specialized agent focused on the creation of SARs. Its work
 
 
 
-## Tools (MCP)
+## Tools
 
 The agents have access to a variety of tools to perform their functions. These tools are defined in `mcp_server/tools.yaml`.
 
@@ -67,9 +69,7 @@ These tools query the KYC (Know Your Customer) data.
 *   `get-potential-pep-matches`: Retrieves a list of users flagged as Politically Exposed Persons (PEPs).
 *   `find-users-by-birth-year-range`: Identifies users born within a specified year range.
 
-
-
-### Tools (Other)
+Other tools:
 
 *   **`pdf_tool`**: A custom python function that allows the `sar_agent` to generate a PDF report.
 *   **`integration_tool`**: A tool for sending an email summary of the conversation. Built using Application Integration in GCP.
@@ -79,10 +79,23 @@ These tools query the KYC (Know Your Customer) data.
 
 ## Running the Agent
 
-To interact with the agent, call ADK's web server via `adk web`. 
-Once deployed to Agent Engine, invoke via `adk web --session_service_uri=agentengine://projects/PROJECT_ID/locations/LOCATION_ID/reasoningEngines/REASONING_ENGINE_ID`
-Leverage Agent Engine Memory Bank using `adk web /PATH/TO/YOUR/AGENT/FOLDER --memory_service_uri="agentengine://REASONING_ENGINE_ID"`
+To interact with the agent, call ADK's web server via 
 
+```bash
+adk web 
+```
+
+Once deployed to Agent Engine, invoke via 
+
+```bash
+adk web --session_service_uri=agentengine://projects/PROJECT_ID/locations/LOCATION_ID/reasoningEngines/REASONING_ENGINE_ID
+```
+
+Leverage Agent Engine Memory Bank using 
+
+```bash
+adk web /PATH/TO/YOUR/AGENT/FOLDER --memory_service_uri="agentengine://REASONING_ENGINE_ID"
+```
 
 
 
@@ -98,4 +111,6 @@ adk deploy agent_engine --project=<YOUR_PROJECT_ID> --region=<YOUR_REGION> --sta
 
 
 ### Examples
-The `root_agent` will greet you and you can then issue commands to it. For example, you could ask it to "investigate user U-HR-005" or "show me the top 5 riskiest users". If you want to draft a SAR, you can instruct the agent to do so, and it will delegate the task to the `sar_agent`. 
+Ask it to "investigate user U-HR-005" or "show me the top 5 riskiest users". 
+
+If you want to draft a SAR, you can instruct the agent to do so, and it will delegate the task to the `sar_agent`.
