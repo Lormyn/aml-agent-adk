@@ -1,0 +1,182 @@
+sources:
+  aml-model-output:
+    kind: bigquery
+    project: ${GOOGLE_CLOUD_PROJECT}
+    location: US
+  kyc-data:
+    kind: bigquery
+    project: ${GOOGLE_CLOUD_PROJECT}
+    location: US
+tools:
+  get-user-full-report:
+    kind: bigquery-sql
+    source: aml-model-output
+    description: Retrieves all features and the final risk assessment for a specific user ID.
+    parameters:
+      - name: user_id_param
+        type: string
+        description: The ID of the user to retrieve the full report for (e.g., 'U-HR-002').
+    statement: |
+      SELECT 
+        user_id,
+        risk_score,
+        total_daily_deposits_usd,
+        num_international_transfers,
+        deposit_to_income_ratio,
+        num_unusual_countries,
+        is_new_account
+      FROM 
+        `aml_dataset.aml_output_1`
+      WHERE 
+        user_id = @user_id_param
+      LIMIT 1
+  get-top-n-risk-users:
+    kind: bigquery-sql
+    source: aml-model-output
+    description: Lists the Top N users flagged for review based on the highest risk scores.
+    parameters:
+      - name: n_limit_param
+        type: integer
+        description: The number N of top high-risk users to return (e.g., 5 or 10).
+    statement: |
+      SELECT 
+        user_id,
+        risk_score,
+        total_daily_deposits_usd
+      FROM 
+        `aml_dataset.aml_output_1`
+      WHERE 
+        flagged_for_review = TRUE
+      ORDER BY 
+        risk_score DESC
+      LIMIT @n_limit_param
+  find-flags-high-deposits:
+    kind: bigquery-sql
+    source: aml-model-output
+    description: Identifies users flagged due to very large single-day deposit volumes (e.g., over $100,000).
+    parameters: [] 
+    statement: |
+      SELECT 
+        user_id,
+        risk_score,
+        total_daily_deposits_usd
+      FROM 
+        `aml_dataset.aml_output_1`
+      WHERE 
+        flagged_for_review = TRUE AND total_daily_deposits_usd >= 100000.00
+      ORDER BY 
+        total_daily_deposits_usd DESC
+  new-account-international-risk:
+    kind: bigquery-sql
+    source: aml-model-output
+    description: Finds new accounts with an unusually high number of international transfers (e.g., 4 or more).
+    parameters: [] 
+    statement: |
+      SELECT 
+        user_id,
+        risk_score,
+        is_new_account,
+        num_international_transfers
+      FROM 
+        `aml_dataset.aml_output_1`
+      WHERE 
+        is_new_account = TRUE AND num_international_transfers >= 4
+      ORDER BY 
+        num_international_transfers DESC
+  get-user-kyc-details:
+    kind: bigquery-sql
+    source: kyc-data
+    description: Retrieves all available KYC details for a specific user ID, including name, birth date, address, and occupation.
+    parameters:
+      - name: user_id_param
+        type: string
+        description: The unique ID of the user to retrieve details for (e.g., 'U-LR-042').
+    statement: |
+      SELECT 
+        user_id,
+        full_name,
+        date_of_birth,
+        residential_address,
+        postal_code,
+        city,
+        occupancy,
+        pep_status
+      FROM 
+        `aml_dataset.kyc_report`
+      WHERE 
+        user_id = @user_id_param
+      LIMIT 1
+  find-users-by-occupation:
+    kind: bigquery-sql
+    source: kyc-data
+    description: Finds all users with a specific occupation for cross-referencing against high-risk activities.
+    parameters:
+      - name: occupancy_param
+        type: string
+        description: The occupation to search for (e.g., 'Revisor' or 'Private Banker').
+    statement: |
+      SELECT 
+        user_id,
+        full_name,
+        date_of_birth,
+        city,
+        occupancy
+      FROM 
+        `aml_dataset.kyc_report`
+      WHERE 
+        occupancy = @occupancy_param
+      ORDER BY 
+        full_name ASC
+  get-potential-pep-matches:
+    kind: bigquery-sql
+    source: kyc-data
+    description: Retrieves the full list of users who have been flagged as a Politically Exposed Person (PEP).
+    parameters: [] 
+    statement: |
+      SELECT 
+        user_id,
+        full_name,
+        date_of_birth,
+        city,
+        occupancy,
+        pep_status
+      FROM 
+        `aml_dataset.kyc_report`
+      WHERE 
+        pep_status = TRUE
+      ORDER BY 
+        full_name ASC
+  find-users-by-birth-year-range:
+    kind: bigquery-sql
+    source: kyc-data
+    description: Identifies users born within a specified range of years for age-based risk analysis.
+    parameters:
+      - name: start_year_param
+        type: integer
+        description: The starting year for the birth date range (e.g., 1980).
+      - name: end_year_param
+        type: integer
+        description: The ending year for the birth date range (e.g., 1990).
+    statement: |
+      SELECT 
+        user_id,
+        full_name,
+        date_of_birth,
+        city,
+        occupancy
+      FROM 
+        `aml_dataset.kyc_report`
+      WHERE 
+        EXTRACT(YEAR FROM PARSE_DATE('%Y-%m-%d', date_of_birth)) BETWEEN @start_year_param AND @end_year_param
+      ORDER BY 
+        date_of_birth DESC
+toolsets:
+  aml-investigation-toolset:
+    - get-user-full-report
+    - get-top-n-risk-users
+    - find-flags-high-deposits
+    - new-account-international-risk
+    - get-user-kyc-details
+    - find-users-by-occupation
+    - get-potential-pep-matches
+    - find-users-by-birth-year-range

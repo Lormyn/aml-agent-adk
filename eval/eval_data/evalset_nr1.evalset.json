@@ -1,0 +1,137 @@
+{
+  "eval_set_id": "evalset_nr1",
+  "name": "evalset_nr1",
+  "eval_cases": [
+    {
+      "eval_id": "evalset",
+      "conversation": [
+        {
+          "invocation_id": "e-6e132138-7778-4301-a62c-51587b79e012",
+          "user_content": {
+            "parts": [
+              {
+                "text": "What kind of information can you provide about users?"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "thought_signature": "CtYCAePx_15xC3B6rtBI2SKcEoZT0RGfgnRgdLRx8dCPgVL37DU3jnz0zFpL1P1rzr926gQWdSXDZJ4HoSopiCUcGsvNUsCtcd50CDheCVJrestUsvlOIJUVZ87csGWIYYAi3Nlhgea0L1-Vw3jwCU8dmOIDdqiE-f9bFtS1tZsQZ6k9L44PkPr-m7meJgSnJT6jIN0RvfOpzlvyTPyhe2O41v3C_cnX-HpyQ0ytPogQtX8_u68FGsAU8s_OfRjSkuw4NxNJwN1rlBE1WvpbkVMaaNfsuvV4zowHnkwVQBkmcl9VYnkX7klMUyP-iL2hhKt_gYpMlTHco2CrxaEXz5wt4CT-gWOfsnr3sC6FacBieIJQaUBO5hk8R1iQv1GxaxqnDO7fyJIW9J53afoP2luGZtxVrQ9MkVk4arqfvh1Q9eQkazEOVvip3vwwVR1WnoEM5uOwtAO2",
+                "text": "I can provide a full report on a specific user, including all their features and their final risk assessment. I can also retrieve KYC (Know Your Customer) details for a user, such as their name, birth date, address, and occupation."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {}
+        },
+        {
+          "invocation_id": "e-aa1d05ad-a910-404e-b3ce-99f363392ff2",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Show me the top 5 most suspicious users."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "The top 5 most suspicious users are:\n\n*   **U-HR-005**: Risk Score: 98.9, Total Daily Deposits: $220,000\n*   **U-HR-001**: Risk Score: 95.1, Total Daily Deposits: $185,000\n*   **U-HR-002**: Risk Score: 88.0, Total Daily Deposits: $12,000\n*   **U-HR-004**: Risk Score: 82.2, Total Daily Deposits: $4,500\n*   **U-HR-006**: Risk Score: 78.5, Total Daily Deposits: $3,500"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "aml_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "thought_signature": "CrsBAePx_159q8zdtcVdcZOyJWP4_a6mla2Sa71hapM1dE7H6dEZjY5z83itsdDOk3nXa398T7BPCnYXWv3EhifPqKA9dgAhlqskMWA7-F0xapSmuz_m9zOzhEymPjIdIoRfTHQFwezpag9E0yBbnB3Ydg4R4USldXvNHxcSe3Ef8z1wTOmKVp4VZTKsdfRAlTs4E0CZfqEVc9N62zBoII7RDV4b47MVYt3eKI1P0OyBxxG6Ng39gt1-a4im5Q==",
+                      "function_call": {
+                        "id": "adk-39d0de7f-fc17-4d10-9a51-0e24bca5467e",
+                        "args": {
+                          "n_limit_param": 5
+                        },
+                        "name": "get-top-n-risk-users"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "aml_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-39d0de7f-fc17-4d10-9a51-0e24bca5467e",
+                        "name": "get-top-n-risk-users",
+                        "response": {
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "{\"risk_score\":98.9,\"total_daily_deposits_usd\":220000,\"user_id\":\"U-HR-005\"}"
+                            },
+                            {
+                              "type": "text",
+                              "text": "{\"risk_score\":95.1,\"total_daily_deposits_usd\":185000,\"user_id\":\"U-HR-001\"}"
+                            },
+                            {
+                              "type": "text",
+                              "text": "{\"risk_score\":88,\"total_daily_deposits_usd\":12000,\"user_id\":\"U-HR-002\"}"
+                            },
+                            {
+                              "type": "text",
+                              "text": "{\"risk_score\":82.2,\"total_daily_deposits_usd\":4500,\"user_id\":\"U-HR-004\"}"
+                            },
+                            {
+                              "type": "text",
+                              "text": "{\"risk_score\":78.5,\"total_daily_deposits_usd\":3500,\"user_id\":\"U-HR-006\"}"
+                            }
+                          ],
+                          "isError": false
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "invocation_id": "e-ec901576-f49e-4ad8-8bc5-eb725387f61c",
+          "user_content": {
+            "parts": [
+              {
+                "text": "I'm concerned about a user named 'Jane Doe'. Can you investigate her?"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "thought_signature": "CvMBAePx_14M3P_acJAvgg8RHn04SZh5FXvjDsA_SRjKnQwQhqt8TT_2mNYMOeHJCATo2JJAQLOiRCgKK-G2dA59FRMUUATlOA_qSWMcMmuKQWkOYnkxi0C-3Q3GSNVCidTqdMErjBeFoXSUWnUuNKSJbZzYTlH5ry6hkTcNOrUBwGPfBG5AbEzXltGn1_WGo6ide5Gz4clctFoan4zhtM951KOv5w8D8P3UEhMomw-QCFDDr8BZ4L4lwlczmKNcZrFIg-Rq7jxlzmAGvfi76maHtHCCMm-CFC6HCUp6IQ1mQASbIPI3Wp87vdpgmMAg41SzgV14",
+                "text": "I can investigate a user if you provide me with their User ID. I cannot search by name."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {}
+        }
+      ],
+      "session_input": {
+        "app_name": "aml_agent",
+        "user_id": "user"
+      }
+    }
+  ]
+}

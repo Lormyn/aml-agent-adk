@@ -1,0 +1,27 @@
+[
+  {
+    "query": "What kind of information can you provide about users?",
+    "expected_tool_use": [],
+    "expected_intermediate_agent_responses": [],
+    "reference": "I can provide various types of information about users, including:\n*   **Full user reports:** This includes all features and the final risk assessment for a specific user ID.\n*   **KYC details:** For a given user ID, I can retrieve their name, birth date, address, and occupation.\n*   **Users by occupation:** I can find all users with a specific occupation.\n*   **Users by birth year range:** I can identify users born within a specified range of years.\n*   **Top N high-risk users:** I can list the users with the highest risk scores.\n*   **Users with high deposits:** I can identify users flagged due to very large single-day deposit volumes (e.g., over $100,000).\n*   **New accounts with international transfer risk:** I can find new accounts with an unusually high number of international transfers.\n*   **Politically Exposed Persons (PEPs):** I can retrieve a list of users flagged as PEPs.\n\nWhat information are you interested in today?"
+  },
+  {
+    "query": "Show me the top 5 most suspicious users.",
+    "expected_tool_use": [
+      {
+        "tool_name": "get-top-n-risk-users",
+        "tool_input": {
+          "n_limit_param": 5
+        }
+      }
+    ],
+    "expected_intermediate_agent_responses": [],
+    "reference": "Here are the top 5 most suspicious users based on their risk scores:\n*   **User ID:** U-HR-005, **Risk Score:** 98.9, **Total Daily Deposits (USD):** 220000\n*   **User ID:** U-HR-001, **Risk Score:** 95.1, **Total Daily Deposits (USD):** 185000\n*   **User ID:** U-HR-002, **Risk Score:** 88, **Total Daily Deposits (USD):** 12000\n*   **User ID:** U-HR-004, **Risk Score:** 82.2, **Total Daily Deposits (USD):** 4500\n*   **User ID:** U-HR-006, **Risk Score:** 78.5, **Total Daily Deposits (USD):** 3500"
+  },
+  {
+    "query": "I'm concerned about a user named 'Jane Doe'. Can you investigate her?",
+    "expected_tool_use": [],
+    "expected_intermediate_agent_responses": [],
+    "reference": "I can investigate users, but I need a User ID to do so, as I cannot search by name. Do you have a User ID for Jane Doe?"
+  }
+]
