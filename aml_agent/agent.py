@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
-from google.adk.tools.mcp_tool.mcp_toolset import McpToolset, StreamableHTTPConnectionParams
+from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
 from google.adk.tools.application_integration_tool.application_integration_toolset import ApplicationIntegrationToolset
 from google.genai.types import Part, Blob
 from google.adk.tools import FunctionTool, BaseTool
@@ -18,7 +19,6 @@ from google.auth.transport.requests import Request
 import os
 import datetime
 import logging
-
 load_dotenv()
 
 _logger = logging.getLogger(__name__)
@@ -119,9 +119,9 @@ pdf_tool = FunctionTool(
 
 # MCP Toolset configuration
 port = os.getenv("PORT", "8080")
-mcp_tools = McpToolset(
+mcp_tools = MCPToolset(
     connection_params=StreamableHTTPConnectionParams(
-        url=os.getenv("MCP_URL")
+        url = os.getenv('MCP_URL')
     ),
     header_provider=get_token_from_context,
 )

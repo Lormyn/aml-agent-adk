@@ -1,4 +1,5 @@
 fpdf2
 google-cloud-aiplatform[adk,agent_engines]>=1.55.0
 pytest-asyncio
-pandaspython-dotenv
+pandas
+python-dotenv
