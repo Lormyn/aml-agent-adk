@@ -18,14 +18,8 @@ import google.auth
 from google.auth.transport.requests import Request
 import os
 import datetime
-import logging
 load_dotenv()
 
-_logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'
-)
 
 # OAuth Configuration
 OAUTH_KEY = "temp:token"
@@ -43,18 +37,15 @@ def get_token_from_adc():
     if oauth_token is None:
         raise ValueError("Failed to retrieve OAuth token from ADC. "
                         "Make sure you have run 'gcloud auth application-default login'.")
-    _logger.warn(f"Got token from ADC - this should not happen when deployed!")
     return oauth_token
 
 def check_token(tool: BaseTool, args: Dict[str, Any], tool_context: ToolContext): 
     """Before tool callback to check for OAuth token in context"""
-    _logger.info("Before tool callback: Checking for OAuth token in context")
 
     oauth_token = tool_context.state.get(OAUTH_KEY)
-
+    
     if OAUTH_KEY == "temp:token":
         # local run, add token from adc
-        _logger.info("Adding token from ADC")
         tool_context.state[OAUTH_KEY] = get_token_from_adc()
 
     return None
@@ -199,7 +190,7 @@ memory_service = VertexAiMemoryBankService(
 
 # Runner setup
 app_runner = Runner(
-    app_name='aml_agent',
+   app_name='aml_agent',
     agent=root_agent,
     session_service=InMemorySessionService(),
     memory_service=memory_service,

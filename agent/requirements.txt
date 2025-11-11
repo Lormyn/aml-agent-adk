@@ -1,0 +1,5 @@
+fpdf2
+google-cloud-aiplatform[adk,agent_engines]
+pytest-asyncio
+pandas
+python-dotenv

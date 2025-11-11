@@ -15,7 +15,7 @@ def load_env():
 async def test_eval_simple():
     """Test the agent's basic ability via a session file."""
     await AgentEvaluator.evaluate(
-        "aml_agent",
+        "agent",
         os.path.join(os.path.dirname(__file__), "eval_data/evalset_nr1.evalset.json"),
         num_runs=1,
         print_detailed_results=True,
