@@ -54,6 +54,16 @@ def get_token_from_context(context: ToolContext):
     oauth_token = context.state.get(OAUTH_KEY)
     return {"Authorization": f"Bearer {oauth_token}"}
 
+
+# MCP Toolset configuration
+port = os.getenv("PORT", "8080")
+mcp_tools = MCPToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url = os.getenv('MCP_URL')
+    ),
+    header_provider=get_token_from_context,
+)
+
 # Function to generate valid PDF bytes from text content
 def generate_valid_pdf_bytes(text_content: str) -> bytes:
     pdf = FPDF()
@@ -108,14 +118,7 @@ pdf_tool = FunctionTool(
     func=create_pdf_file,
 )
 
-# MCP Toolset configuration
-port = os.getenv("PORT", "8080")
-mcp_tools = MCPToolset(
-    connection_params=StreamableHTTPConnectionParams(
-        url = os.getenv('MCP_URL')
-    ),
-    header_provider=get_token_from_context,
-)
+
 
 # Application Integration Tool for sending emails
 integration_tool = ApplicationIntegrationToolset(
