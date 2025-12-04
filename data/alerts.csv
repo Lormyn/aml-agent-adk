@@ -1,0 +1,9 @@
+alert_id,user_id,trigger_reason,status,created_at,severity
+dcad7d90-216d-4f9d-9e74-a702deda6324,U-5B8A997B,Strukturering: Flera insättningar strax under rapporteringsgräns,NY,2025-11-14T12:17:28.843651,HÖG
+f1cbef68-8bbc-4234-bbb0-d1342c344afe,U-2BB7762B,Snabb rörelse: Pengar överförda omedelbart efter mottagande,NY,2025-11-23T12:17:28.843651,MEDEL
+75104c2e-7d1e-493e-ad9d-85e1721f1066,U-90B9F64C,Snabb rörelse: Pengar överförda omedelbart efter mottagande,NY,2025-11-24T12:17:28.843651,MEDEL
+b2a0ba2b-e1fd-4939-b5f8-0d39b137a63b,U-ADA6B48C,Snabb rörelse: Pengar överförda omedelbart efter mottagande,NY,2025-11-25T12:17:28.843651,MEDEL
+20b438cf-16ac-4059-a411-dbd814f5b131,U-F0300908,Snabb rörelse: Pengar överförda omedelbart efter mottagande,NY,2025-11-25T12:17:28.843651,MEDEL
+bbe90995-0bde-43b3-bc19-8978c367a6bf,U-B04F9201,Snabb rörelse: Pengar överförda omedelbart efter mottagande,NY,2025-11-23T12:17:28.843651,MEDEL
+56466fa0-d83f-4c19-81eb-1c2f241b7b17,U-B34FC55E,Högt värde transaktion: Enskild transaktion > 100 000 kr,NY,2025-10-25T12:17:28.843651,MEDEL
+973b2fe1-5bf8-40e6-8e96-662c74a57001,U-55179B0D,Geografisk risk: Stor överföring till högriskjurisdiktion,NY,2025-10-16T12:17:28.843651,HÖG

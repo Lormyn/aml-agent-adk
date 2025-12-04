@@ -1,182 +1,254 @@
 sources:
-  aml-model-output:
+  aml-analysis-data:
     kind: bigquery
     project: ${GOOGLE_CLOUD_PROJECT}
     location: US
-  kyc-data:
-    kind: bigquery
-    project: ${GOOGLE_CLOUD_PROJECT}
-    location: US
+    useClientOAuth: true
+
 tools:
-  get-user-full-report:
+  # ----------------------------------------------------------------------
+  # 1. ALERT CONTEXT - Start Here
+  # ----------------------------------------------------------------------
+  get-user-details:
     kind: bigquery-sql
-    source: aml-model-output
-    description: Retrieves all features and the final risk assessment for a specific user ID.
+    source: aml-analysis-data
+    description: |
+      Retrieves full KYC profile for a specific user. 
+      Essential for SAR reporting (Address, Phone, Email, etc).
     parameters:
-      - name: user_id_param
+      - name: user_id
         type: string
-        description: The ID of the user to retrieve the full report for (e.g., 'U-HR-002').
+        description: The User ID.
     statement: |
       SELECT 
         user_id,
+        name,
+        occupation,
+        email,
+        phone,
+        address,
+        annual_income,
         risk_score,
-        total_daily_deposits_usd,
-        num_international_transfers,
-        deposit_to_income_ratio,
-        num_unusual_countries,
-        is_new_account
+        joined_date,
+        is_pep
       FROM 
-        `aml_dataset.aml_output_1`
+        `aml_dataset.users`
       WHERE 
-        user_id = @user_id_param
-      LIMIT 1
-  get-top-n-risk-users:
+        user_id = @user_id
+
+  search-user-by-name:
     kind: bigquery-sql
-    source: aml-model-output
-    description: Lists the Top N users flagged for review based on the highest risk scores.
+    source: aml-analysis-data
+    description: |
+      Search for a user by their name to find their User ID and profile.
+      Useful when you only have a name (e.g. "Who is John Smith?").
     parameters:
-      - name: n_limit_param
-        type: integer
-        description: The number N of top high-risk users to return (e.g., 5 or 10).
-    statement: |
-      SELECT 
-        user_id,
-        risk_score,
-        total_daily_deposits_usd
-      FROM 
-        `aml_dataset.aml_output_1`
-      WHERE 
-        flagged_for_review = TRUE
-      ORDER BY 
-        risk_score DESC
-      LIMIT @n_limit_param
-  find-flags-high-deposits:
-    kind: bigquery-sql
-    source: aml-model-output
-    description: Identifies users flagged due to very large single-day deposit volumes (e.g., over $100,000).
-    parameters: [] 
-    statement: |
-      SELECT 
-        user_id,
-        risk_score,
-        total_daily_deposits_usd
-      FROM 
-        `aml_dataset.aml_output_1`
-      WHERE 
-        flagged_for_review = TRUE AND total_daily_deposits_usd >= 100000.00
-      ORDER BY 
-        total_daily_deposits_usd DESC
-  new-account-international-risk:
-    kind: bigquery-sql
-    source: aml-model-output
-    description: Finds new accounts with an unusually high number of international transfers (e.g., 4 or more).
-    parameters: [] 
-    statement: |
-      SELECT 
-        user_id,
-        risk_score,
-        is_new_account,
-        num_international_transfers
-      FROM 
-        `aml_dataset.aml_output_1`
-      WHERE 
-        is_new_account = TRUE AND num_international_transfers >= 4
-      ORDER BY 
-        num_international_transfers DESC
-  get-user-kyc-details:
-    kind: bigquery-sql
-    source: kyc-data
-    description: Retrieves all available KYC details for a specific user ID, including name, birth date, address, and occupation.
-    parameters:
-      - name: user_id_param
+      - name: name
         type: string
-        description: The unique ID of the user to retrieve details for (e.g., 'U-LR-042').
+        description: The name (or partial name) to search for.
     statement: |
       SELECT 
         user_id,
-        full_name,
-        date_of_birth,
-        residential_address,
-        postal_code,
-        city,
-        occupancy,
-        pep_status
+        name,
+        occupation,
+        email,
+        phone,
+        address,
+        annual_income,
+        risk_score,
+        joined_date,
+        is_pep
       FROM 
-        `aml_dataset.kyc_report`
+        `aml_dataset.users`
       WHERE 
-        user_id = @user_id_param
-      LIMIT 1
-  find-users-by-occupation:
+        LOWER(name) LIKE LOWER(CONCAT('%', @name, '%'))
+      LIMIT 5
+
+  get-alert-details:
     kind: bigquery-sql
-    source: kyc-data
-    description: Finds all users with a specific occupation for cross-referencing against high-risk activities.
+    source: aml-analysis-data
+    description: |
+      Retrieves full context for an alert, joining Alert data with User profile.
+      Returns the trigger reason, user risk score, and KYC details.
     parameters:
-      - name: occupancy_param
+      - name: alert_id
         type: string
-        description: The occupation to search for (e.g., 'Revisor' or 'Private Banker').
+        description: The unique Alert UUID.
     statement: |
       SELECT 
-        user_id,
-        full_name,
-        date_of_birth,
-        city,
-        occupancy
+        a.alert_id,
+        a.trigger_reason,
+        a.severity,
+        a.created_at,
+        u.user_id,
+        u.name,
+        u.occupation,
+        u.risk_score,
+        u.annual_income,
+        u.is_pep
       FROM 
-        `aml_dataset.kyc_report`
+        `aml_dataset.alerts` a
+      JOIN 
+        `aml_dataset.users` u ON a.user_id = u.user_id
       WHERE 
-        occupancy = @occupancy_param
-      ORDER BY 
-        full_name ASC
-  get-potential-pep-matches:
+        a.alert_id = @alert_id
+
+  # ----------------------------------------------------------------------
+  # 2. MONEY FLOW - Trace Funds
+  # ----------------------------------------------------------------------
+  trace-money-flow:
     kind: bigquery-sql
-    source: kyc-data
-    description: Retrieves the full list of users who have been flagged as a Politically Exposed Person (PEP).
-    parameters: [] 
-    statement: |
-      SELECT 
-        user_id,
-        full_name,
-        date_of_birth,
-        city,
-        occupancy,
-        pep_status
-      FROM 
-        `aml_dataset.kyc_report`
-      WHERE 
-        pep_status = TRUE
-      ORDER BY 
-        full_name ASC
-  find-users-by-birth-year-range:
-    kind: bigquery-sql
-    source: kyc-data
-    description: Identifies users born within a specified range of years for age-based risk analysis.
+    source: aml-analysis-data
+    description: |
+      Traces money leaving a user's account. Shows who they sent money to, 
+      and where that money went next (2 hops). Critical for finding mule rings.
     parameters:
-      - name: start_year_param
-        type: integer
-        description: The starting year for the birth date range (e.g., 1980).
-      - name: end_year_param
-        type: integer
-        description: The ending year for the birth date range (e.g., 1990).
+      - name: user_id
+        type: string
+        description: The User ID to trace funds FROM.
+    statement: |
+      WITH hop1 AS (
+        SELECT 
+          sender_id, 
+          receiver_id as hop1_receiver, 
+          amount, 
+          timestamp 
+        FROM `aml_dataset.transactions` 
+        WHERE sender_id = @user_id
+      ),
+      hop2 AS (
+        SELECT 
+          t.sender_id as hop1_receiver, 
+          t.receiver_id as hop2_receiver, 
+          t.amount, 
+          t.timestamp 
+        FROM `aml_dataset.transactions` t
+        JOIN hop1 h ON t.sender_id = h.hop1_receiver
+        WHERE t.timestamp > h.timestamp -- Money must move AFTER receiving it
+      )
+      SELECT 
+        h1.sender_id as source,
+        u1.name as source_name,
+        h1.hop1_receiver as intermediate,
+        u2.name as intermediate_name,
+        h1.amount as amount_in,
+        h2.hop2_receiver as final_destination,
+        u3.name as destination_name,
+        h2.amount as amount_out
+      FROM hop1 h1
+      LEFT JOIN hop2 h2 ON h1.hop1_receiver = h2.hop1_receiver
+      JOIN `aml_dataset.users` u1 ON h1.sender_id = u1.user_id
+      JOIN `aml_dataset.users` u2 ON h1.hop1_receiver = u2.user_id
+      LEFT JOIN `aml_dataset.users` u3 ON h2.hop2_receiver = u3.user_id
+      ORDER BY h1.timestamp DESC
+      LIMIT 20
+
+  # ----------------------------------------------------------------------
+  # 3. NETWORK ANALYSIS - Counterparty Check
+  # ----------------------------------------------------------------------
+  analyze-counterparties:
+    kind: bigquery-sql
+    source: aml-analysis-data
+    description: |
+      Analyzes who a user transacts with most. 
+      Flags if they are dealing with high-risk users.
+    parameters:
+      - name: user_id
+        type: string
+        description: The User ID to analyze.
     statement: |
       SELECT 
-        user_id,
-        full_name,
-        date_of_birth,
-        city,
-        occupancy
+        CASE 
+          WHEN t.sender_id = @user_id THEN t.receiver_id 
+          ELSE t.sender_id 
+        END as counterparty_id,
+        u.name as counterparty_name,
+        u.risk_score as counterparty_risk,
+        COUNT(*) as txn_count,
+        SUM(t.amount) as total_volume
       FROM 
-        `aml_dataset.kyc_report`
+        `aml_dataset.transactions` t
+      JOIN 
+        `aml_dataset.users` u ON (
+          CASE 
+            WHEN t.sender_id = @user_id THEN t.receiver_id 
+            ELSE t.sender_id 
+          END = u.user_id
+        )
       WHERE 
-        EXTRACT(YEAR FROM PARSE_DATE('%Y-%m-%d', date_of_birth)) BETWEEN @start_year_param AND @end_year_param
+        t.sender_id = @user_id OR t.receiver_id = @user_id
+      GROUP BY 
+        1, 2, 3
       ORDER BY 
-        date_of_birth DESC
+        total_volume DESC
+      LIMIT 10
+
+  # ----------------------------------------------------------------------
+  # 4. TRANSACTION HISTORY - Recent Activity
+  # ----------------------------------------------------------------------
+  get-recent-transactions:
+    kind: bigquery-sql
+    source: aml-analysis-data
+    description: |
+      Gets the last 20 transactions for a user.
+    parameters:
+      - name: user_id
+        type: string
+        description: The User ID.
+    statement: |
+      SELECT 
+        txn_id,
+        sender_id,
+        receiver_id,
+        amount,
+        txn_type,
+        timestamp
+      FROM 
+        `aml_dataset.transactions`
+      WHERE 
+        sender_id = @user_id OR receiver_id = @user_id
+      ORDER BY 
+        timestamp DESC
+      LIMIT 20
+
+  # ----------------------------------------------------------------------
+  # 5. QUEUE - High Priority Alerts
+  # ----------------------------------------------------------------------
+  get-high-priority-alerts:
+    kind: bigquery-sql
+    source: aml-analysis-data
+    description: |
+      Gets the highest severity alerts that are still NEW.
+    parameters: []
+    statement: |
+      SELECT 
+        a.alert_id,
+        a.trigger_reason,
+        a.severity,
+        u.name as user_name,
+        u.risk_score,
+        u.is_pep
+      FROM 
+        `aml_dataset.alerts` a
+      JOIN 
+        `aml_dataset.users` u ON a.user_id = u.user_id
+      WHERE 
+        a.status = 'NY'
+      ORDER BY 
+        CASE a.severity 
+          WHEN 'HÖG' THEN 1 
+          WHEN 'MEDEL' THEN 2 
+          ELSE 3 
+        END ASC,
+        u.risk_score DESC
+      LIMIT 10
+
 toolsets:
-  aml-investigation-toolset:
-    - get-user-full-report
-    - get-top-n-risk-users
-    - find-flags-high-deposits
-    - new-account-international-risk
-    - get-user-kyc-details
-    - find-users-by-occupation
-    - get-potential-pep-matches
-    - find-users-by-birth-year-range
+  false-positive-reduction-toolset:
+    - get-user-details
+    - search-user-by-name
+    - get-alert-details
+    - trace-money-flow
+    - analyze-counterparties
+    - get-recent-transactions
+    - get-high-priority-alerts

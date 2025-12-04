@@ -1,0 +1,101 @@
+user_id,name,occupation,email,phone,address,annual_income,risk_score,joined_date,is_pep
+U-1A6C3377,Birgitta Johansson,Domare,ottonorrman@example.org,0014-526 26,"Grangränd 032, 59319 Halmstad",1232008,0.4953723287046587,2023-09-30,True
+U-567ECBE0,Marianne Larsson,Domare,hstahl@example.net,0295-26 85 06,"Backgatan 603, 38388 Uddevalla",1207290,0.6128582207985622,2025-03-27,True
+U-B15BB7C7,Herman Malm,Lärare,fjonsson@example.net,+46 (0)10 45 77 48,"Ängsgatan 23, 30342 Motala",642429,0.1811637018259067,2023-03-22,False
+U-B3E4424F,Erik Davidsson,Domare,dgustavsson@example.com,+46 (0)929 601 43,"Parkgatan 2, 68999 Borås",1198007,0.3583318632642539,2025-08-11,True
+U-F1F65246,Hillevi Johansson,Företagare,albin41@example.org,0327-01 28 24,"Fabriksstigen 10, 90310 Karlskrona",2693529,0.5237367838952587,2024-11-26,False
+U-062F0271,Marie Berg,Arbetslös,johannahansen@example.net,08-29 16 08,"Ringvägen 388, 15726 Skövde",2995,0.33755009058112556,2025-03-25,False
+U-DCCDC403,Idun Öberg,Sjuksköterska,gnordin@example.org,033-435 54 28,"Järnvägstorget 9, 77764 Uppsala",664545,0.24930428011747996,2023-10-17,False
+U-832433E5,Karin Möller,Sjuksköterska,rjansson@example.net,0983-64 40 16,"Stationsgatan 2, 70250 Karlskrona",859533,0.2053475993746338,2024-12-15,False
+U-1E9F9E86,Mohammed Nilsson,Mjukvaruutvecklare,nordjosefine@example.net,+46 (0)023 005 28,"Aspgränd 0, 32648 Trelleborg",1423399,0.5067656530713163,2025-03-18,False
+U-CD04EA29,Elisabet Pettersson,Domare,elisabet17@example.com,0441-94 57 35,"Fabriksgatan 428, 62242 Trelleborg",1367861,0.5488653657552666,2024-12-22,True
+U-4145A2E6,Rebecka Nyman Viklund,Arbetslös,ollesjoberg@example.net,+46 (0)053 010 70,"Parkvägen 08, 84894 Borås",52363,0.5069832794656506,2024-08-12,False
+U-8057742D,Marcus Andersson-Lundmark,Domare,johanlundberg@example.org,+46 (0)74 88 60 76,"Kyrkogränd 4, 15350 Varberg",1235703,0.4928037461125522,2023-06-23,True
+U-AC074304,Camilla Hallgren,Domare,flindberg@example.org,+46 (0)8 505 461 61,"Skogsgatan 740, 51542 Västerås",1208506,0.2628990183446007,2023-02-20,False
+U-E681EA30,Albin Gunnarsson,Mjukvaruutvecklare,lisa45@example.org,+46 (0)8 401 207 80,"Trädgårdstorget 85, 97903 Kalmar",1463276,0.22483624202437302,2024-05-05,False
+U-1E0A7A66,Dennis Berglund,Student,ymartensson@example.net,+46 (0)514 286 91,"Industrivägen 151, 77392 Malmö",97275,0.0039410696576960835,2025-03-20,False
+U-38455E9C,Emma Lundberg,Arbetslös,vlindqvist@example.net,0194-71 71 34,"Grangatan 346, 46070 Kristianstad",35582,0.29762239776479066,2023-04-04,False
+U-91723BAC,Algot Larsson,Företagare,pekkasundqvist@example.net,0431-31 08 86,"Strandgatan 1, 49875 Jönköping",3215225,0.6634729795076885,2023-02-04,False
+U-AD06EC0E,Johanna Eriksson,Importör,iolausson@example.org,08-560 979 96,"Industrigatan 3, 24863 Linköping",735802,0.7338948351357121,2024-05-02,False
+U-52723C43,Lisa Göransson,Högre tjänsteman,andreashultgren@example.com,08-009 70 37,"Björkgatan 254, 42364 Lund",1088610,0.6401790312326948,2024-09-07,False
+U-6C54AE82,Sebastian Eriksson Thulin,Högre tjänsteman,mariasundin@example.org,0848-118 07,"Parkvägen 61, 51953 Piteå",1485922,0.5484386003905684,2024-05-02,False
+U-85E23257,Konrad Rosén,Arbetslös,ulindahl@example.org,049-123 72 43,"Trädgårdsgatan 197, 78466 Sundsvall",68532,0.37157351270999384,2024-09-04,False
+U-2FD47D83,Sune Fredriksson,Domare,tgustafsson@example.com,08-166 94 41,"Idrottsvägen 7, 61815 Karlstad",840290,0.5534118523997952,2023-10-18,False
+U-243DAC86,Sara Persson-Nilsson,Diplomat,sebastianstahl@example.net,+46 (0)78 31 30 59,"Skolgatan 9, 50122 Gävle",728880,0.6592931982234903,2022-12-26,False
+U-5F13B2F9,Hannes Rosén,Domare,bmartensson@example.net,0063-640 87,"Aspgatan 97, 90929 Motala",1385103,0.6208629007404135,2023-01-05,False
+U-7CFB8E6B,Katrin Söderqvist,Högre tjänsteman,gnaslund@example.com,+46 (0)43 50 68 45,"Skolgatan 316, 62438 Luleå",967091,0.6582121881004905,2023-06-02,False
+U-E20E3420,Peter Carlsson Eriksson,Diplomat,johannessonmaria@example.org,011-363 34 34,"Granvägen 2, 75567 Karlstad",1097378,0.6292469370413211,2025-01-20,False
+U-B88E28FE,Loke Kjellberg,Importör,ulundin@example.org,+46 (0)654 233 49,"Fabrikstorget 665, 61564 Lidingö",1188310,0.22469594566904239,2025-07-30,False
+U-1DFBE7CE,Emma Nordström,Politiker,anderssonlennart@example.com,08-32 47 78,"Strandgatan 88, 49564 Trelleborg",1176559,0.567925141144976,2025-07-30,False
+U-B34FC55E,Ann-Britt Vikström,Företagare,golofsson@example.org,058-666 47 76,"Villatorget 352, 35025 Karlskrona",2014263,0.559278761286616,2025-03-08,False
+U-EAF8E418,Anne Nilsson Lindberg,Domare,ingegerd39@example.org,010-687 50 08,"Backgatan 03, 65773 Göteborg",1423858,0.6343000526775465,2024-07-13,False
+U-E466E98D,Åke Asp,Sjuksköterska,dbostrom@example.org,057-546 86 61,"Storvägen 13, 88101 Gävle",811465,0.10808096466336814,2024-08-02,False
+U-3A5D9B61,Anne Strand,Högre tjänsteman,nilssonsusanne@example.com,0551-878 54,"Skogsgatan 321, 23073 Lidköping",1119600,0.4863416302135414,2023-03-20,False
+U-227CA6E7,Christoffer Andersson,Politiker,ustrand@example.com,08-292 808 98,"Järnvägsgatan 5, 35092 Linköping",954169,0.6920016944225779,2023-03-13,False
+U-9DFCE14D,Ingegärd Lind,Politiker,marta98@example.com,036-211 55 23,"Kyrkostigen 999, 79173 Varberg",1061552,0.7042545564614793,2025-04-12,False
+U-19572687,Karin Andersson-Karlsson,Sjuksköterska,larssonsofie@example.org,072-81 82 56,"Ängsgatan 4, 77627 Borås",766300,0.1922454864238489,2023-09-02,False
+U-5B343EFB,Sofia Larsson Sjölund,Diplomat,magnusbackman@example.org,08-336 24 20,"Industritorget 0, 79520 Linköping",1006496,0.48314841833438116,2022-12-26,False
+U-9DFE947F,Morgan Steen-Johansson,Högre tjänsteman,bpettersson@example.org,+46 (0)924 209 42,"Skolstigen 02, 34292 Nyköping",967655,0.6344611657661137,2025-05-06,False
+U-52940471,Anita Johansson,Arbetslös,kennethlandstrom@example.com,0410-558 41,"Åkertorget 73, 65027 Sandviken",60256,0.3787095578897093,2023-03-22,False
+U-8605B00D,Sture Hellberg,Företagare,ularsson@example.org,0683-691 19,"Industritorget 71, 16907 Uddevalla",1969271,0.42928017812554353,2024-11-20,False
+U-F0300908,Thomas Larsson,Företagare,lgustavsson@example.org,019-985 96 30,"Grangatan 54, 11660 Varberg",3319511,0.8341715381358341,2023-12-17,False
+U-6398255A,Emelie Andersson,Lärare,nordinalbin@example.com,+46 (0)368 913 39,"Ringstigen 5, 24225 Borås",461598,0.2668298845370984,2023-11-03,False
+U-F602A73E,Fredrik Svahn,Politiker,miaaberg@example.net,08-736 322 88,"Björkstigen 724, 24777 Lidingö",645162,0.7311467732758221,2023-12-30,False
+U-095123A5,Susanne Holm,Politiker,periksson@example.org,08-247 751 90,"Järnvägstorget 4, 77285 Karlskrona",786166,0.6291647475253752,2024-06-10,False
+U-7BD99A15,Pawel Hasan,Importör,xnordqvist@example.org,0760-16 45 33,"Backtorget 82, 31882 Örebro",1218322,0.6477808710762709,2023-10-02,False
+U-56C46D18,Axel Lindqvist,Politiker,adamkarlsson@example.org,+46 (0)419 346 94,"Industrivägen 9, 80370 Skövde",646927,0.5261148369225946,2024-08-04,False
+U-63DCAFD0,Lars Magnusson,Diplomat,britt82@example.org,053-70 16 69,"Ängsvägen 21, 19775 Norrköping",1179064,0.7596003714427251,2025-04-27,False
+U-69448C08,Linnea Johansson,Arbetslös,nanderberg@example.com,+46 (0)79 41 13 91,"Ringvägen 0, 58291 Uddevalla",7773,0.5222019141935661,2025-02-28,False
+U-ACA9BFBB,Elisabeth Blomberg,Lärare,sundbergmarianne@example.net,08-510 36 46,"Trädgårdstorget 7, 34836 Karlskrona",448949,0.07570679712442088,2023-08-17,False
+U-D3CA6B12,Per Turesson,Högre tjänsteman,ndanielsson@example.net,088-16 05 26,"Skogsstigen 837, 60385 Luleå",1614321,0.5627954801806851,2024-05-07,False
+U-0E32A873,Estelle Karlsson,Mjukvaruutvecklare,anderssonandreas@example.com,08-249 04 38,"Storgränd 48, 61361 Karlskoga",897324,0.3179782955891349,2025-08-27,False
+U-B34E644D,Ludvig Bylund,Diplomat,kristina04@example.org,08-32 64 56,"Parkgatan 428, 30196 Eskilstuna",749580,0.40115401605434575,2023-07-21,False
+U-55179B0D,Erica Bengtsson,Importör,rasmusnilsson@example.org,08-488 877 85,"Parkgatan 169, 85916 Sundsvall",1883567,0.5439715489729415,2024-11-27,False
+U-46FCB00A,Gunnar Nilsson,Lärare,christinaivarsson@example.com,08-664 523 67,"Villatorget 73, 39390 Örnsköldsvik",665080,0.20633093703396338,2024-03-10,False
+U-7BC4412E,Tina Jonsson,Importör,berghakan@example.com,+46 (0)812 128 94,"Furuvägen 597, 70137 Eskilstuna",1168078,0.6506713656155585,2024-12-01,False
+U-AF2C94E5,Conny Nyman Svensson,Domare,hlund@example.net,08-093 340 17,"Skogstorget 88, 58987 Göteborg",1150980,0.47941604968423635,2023-09-07,False
+U-8DFC97F4,Alva Backlund,Diplomat,tsoderholm@example.com,08-825 147 21,"Stationsvägen 5, 71356 Uddevalla",895220,0.513592650285333,2024-09-19,False
+U-A26B8F31,Kristian Nilsson Ekman,Student,elliotwallin@example.org,08-975 87 03,"Skolgränd 0, 68983 Motala",127679,0.17794495043189174,2023-11-08,False
+U-8540D3B7,Erika Robertsson,Student,joachimhedman@example.org,+46 (0)78 79 26 91,"Industritorget 66, 31220 Jönköping",91088,0.0,2024-06-13,False
+U-9D2B9C17,Bertil Bergqvist,Importör,karlssonviggo@example.net,08-018 84 11,"Ekgatan 234, 16063 Piteå",1295475,0.5607745110953325,2024-08-22,False
+U-032928E4,Cecilia Lindquist,Politiker,henry91@example.org,+46 (0)89 95 73 29,"Trädgårdsgatan 766, 56296 Skellefteå",807339,0.7598034284612033,2024-09-21,False
+U-D61FECD0,Karin Johansson,Domare,brornyman@example.com,08-503 844 08,"Kyrkogränd 1, 28014 Halmstad",1489012,0.36464374059301663,2025-03-02,False
+U-2BD65D23,Lina Johansson,Arbetslös,larssongottfrid@example.org,0250-660 67,"Industrivägen 417, 75157 Karlskoga",86585,0.24096617460648972,2023-08-08,False
+U-D126D72E,Marie Hansson,Högre tjänsteman,ahmedelisabet@example.net,052-019 10 13,"Skolgatan 21, 60103 Östersund",1745641,0.6767906347784176,2024-03-02,False
+U-ADA6B48C,Amanda Söderström,Importör,ynilsson@example.org,08-26 13 95,"Stationsvägen 50, 79006 Stockholm",1592888,0.6007283978977787,2023-11-28,False
+U-F22CE070,Kerstin Eriksson,Arbetslös,elofvikstrom@example.org,0461-775 38,"Industrivägen 293, 76439 Trollhättan",46320,0.38700711742215754,2024-05-14,False
+U-B9858C18,Margareta Bengtsson,Student,fohlsson@example.org,+46 (0)8 652 114 21,"Ektorget 279, 34797 Skellefteå",108178,0.19112584158660767,2023-12-11,False
+U-B04F9201,Göran Hallgren,Diplomat,elindberg@example.com,009-07 97 02,"Villagatan 0, 15068 Nyköping",1128454,0.615296459180251,2023-12-25,False
+U-2BB7762B,Michaela Lundqvist,Politiker,nordstromelena@example.net,08-35 85 85,"Åkervägen 632, 35110 Trollhättan",1042469,0.6580693436181667,2023-01-17,False
+U-EBE9098D,Hannes Wallin Johansson,Domare,ilarsson@example.com,018-304 77 54,"Strandgränd 51, 23953 Örnsköldsvik",848581,0.47843328981595684,2024-04-19,False
+U-BD86FB58,Amina Andersson,Sjuksköterska,olssonniklas@example.net,056-84 23 68,"Granvägen 5, 97316 Lidingö",760752,0.029866652890793877,2025-05-25,False
+U-90B9F64C,Maria Abdi,Domare,backlouise@example.net,042-778 81 11,"Bäckgatan 567, 66381 Skövde",819373,0.3761932230554052,2022-12-14,False
+U-2C013416,Viktoria Nilsson,Sjuksköterska,emilpettersson@example.net,08-941 43 94,"Aspgränd 1, 71277 Uppsala",757010,0.2030979671218341,2025-03-26,False
+U-4DA4AE7B,Ethel Dahlberg,Domare,sebastian90@example.com,08-541 170 17,"Bäckvägen 5, 68386 Sandviken",842970,0.3981942403679208,2024-03-19,False
+U-0394A4E6,Anders Dahlén,Student,johan74@example.org,08-028 03 51,"Parkgatan 6, 78139 Trelleborg",156319,0.06227192288770034,2023-02-18,False
+U-8E245F7F,Anna Mohammed,Företagare,annawiklund@example.net,08-340 43 50,"Ringvägen 972, 56098 Motala",1867058,0.3580912526162065,2024-04-20,False
+U-BB3E915B,Valdemar Svanberg,Arbetslös,annjohansson@example.net,+46 (0)105 246 34,"Kyrkogatan 1, 93015 Trelleborg",70816,0.3300754522378857,2024-11-22,False
+U-CA1ABBAD,Maria Lundgren,Domare,djohansson@example.org,08-181 393 86,"Åkerstigen 2, 20717 Helsingborg",1323641,0.37572927500373865,2024-03-22,False
+U-380AD994,Maria Nilsson,Mjukvaruutvecklare,tkristensson@example.net,+46 (0)538 145 55,"Ringstigen 68, 25056 Ängelholm",1441179,0.18275379977630107,2023-09-13,False
+U-793D8767,Kristina Nyberg,Student,zjohansson@example.org,+46 (0)8 557 285 18,"Industrivägen 9, 73681 Örebro",114627,0.1356764476450167,2023-04-23,False
+U-BA9E9B72,Tommy Svensson,Företagare,uberglund@example.com,+46 (0)8 588 444 25,"Skogstorget 0, 94570 Sandviken",4285054,0.5863731294745681,2025-05-08,False
+U-78A35E2E,Anneli Eriksson,Student,ejohansson@example.org,08-103 746 37,"Kyrkostigen 32, 84310 Sundsvall",64279,0.06971025164460105,2024-12-26,False
+U-20B600BB,Aston Andersson,Lärare,olofbergstrom@example.com,+46 (0)8 852 868 25,"Nystigen 14, 10573 Stockholm",667598,0.07231575038714397,2023-05-21,False
+U-DD2CA501,Pia Sundqvist-Johansson,Student,gustaf90@example.org,+46 (0)890 672 26,"Genvägen 676, 80165 Falun",53230,0.11643308470917642,2024-12-08,False
+U-FC982775,Margareta Svensson,Student,carljakobsson@example.com,021-05 14 96,"Ängstorget 40, 95441 Sandviken",42486,0.019652673081740707,2025-05-24,False
+U-490DEEA5,Maria Hägglund,Sjuksköterska,jacobekelund@example.com,+46 (0)107 544 46,"Skogsgatan 494, 91293 Uppsala",890461,0.042422092408017725,2025-02-05,False
+U-8B6A5FD9,Stig Johansson,Arbetslös,sarakarlsson@example.org,08-338 680 24,"Storvägen 11, 81503 Halmstad",48669,0.25768044352018055,2024-10-27,False
+U-31005BC3,Martin Jönsson,Politiker,elindstrom@example.net,+46 (0)318 041 93,"Industrivägen 507, 63360 Västerås",1050856,0.7411763890865357,2025-07-03,False
+U-61F1CC2F,Erik Larsson Carlsson,Diplomat,edvinrask@example.org,0172-59 03 99,"Ringgatan 75, 25807 Kalmar",873942,0.498550811096846,2023-08-06,False
+U-A6399F5F,Ingvar Sjöström-Larsson,Mjukvaruutvecklare,lindstrompontus@example.org,0148-56 49 74,"Parkvägen 3, 10685 Stockholm",863577,0.30380499851348913,2024-10-12,False
+U-5118C6A7,Gunnar Karlsson,Student,hanssonkristina@example.org,0991-242 48,"Aspgatan 65, 28467 Lund",128623,0.0,2023-01-19,False
+U-1394B876,Paul Gustavsson,Arbetslös,lisbeth11@example.org,08-541 24 64,"Trädgårdsgatan 0, 31427 Motala",84620,0.4160218621795257,2023-01-12,False
+U-EA21961E,Emilia Berglund,Lärare,mariaandersson@example.net,+46 (0)332 725 39,"Åkertorget 05, 61919 Jönköping",475599,0.2375444806244953,2024-02-23,False
+U-3FC0DB2C,Lisa Hermansson,Arbetslös,alindberg@example.net,08-481 169 20,"Backvägen 4, 70377 Lidköping",96590,0.49933027705249217,2024-03-30,False
+U-539B7F4F,Arvid Andersson,Mjukvaruutvecklare,bengtssonomar@example.net,+46 (0)15 02 61 22,"Skogsgränd 033, 52943 Västerås",1305880,0.18401915714473366,2023-01-24,False
+U-82A69CAF,Alexander Berg-Karlsson,Politiker,bo41@example.org,08-097 51 58,"Grangatan 3, 71731 Kalmar",946864,0.6493559937167211,2023-03-26,False
+U-697B35FF,Elsa Lindberg,Högre tjänsteman,harald80@example.com,+46 (0)75 16 69 09,"Björkstigen 7, 56396 Sundsvall",978983,0.6994195703653987,2023-09-14,False
+U-82308133,Mikael Nilsson,Företagare,emma45@example.com,08-25 31 48,"Parkvägen 7, 91728 Borås",4331802,0.5385994619248915,2023-11-14,False
+U-5B8A997B,Emil Lundin,Lärare,znoren@example.com,0771-29 21 80,"Ringvägen 179, 72962 Falun",565390,0.16199152010576492,2023-04-23,False
+U-4C164A94,Catharina Ali,Arbetslös,emilia45@example.org,08-64 28 39,"Skolgatan 343, 34108 Nyköping",55627,0.3409500248702319,2025-02-23,False
+U-5E14F388,Sven Engdahl,Mjukvaruutvecklare,alice20@example.com,08-850 98 90,"Bäckvägen 94, 51033 Skövde",1372541,0.4460849033895503,2023-08-12,False
