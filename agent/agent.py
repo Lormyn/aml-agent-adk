@@ -7,6 +7,7 @@ from google.genai.types import Part, Blob
 from google.adk.tools import FunctionTool, BaseTool
 from typing import Dict, Any
 from fpdf import FPDF
+from google.adk.memory import VertexAiMemoryBankService
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.adk.tools.tool_context import ToolContext
@@ -128,16 +129,21 @@ integration_tool = ApplicationIntegrationToolset(
 # In-memory artifact service for PDF storage
 artifact_service = InMemoryArtifactService()
 
+# Memory Bank service for persistent memory storage
+memory_bank_service = VertexAiMemoryBankService(
+    project=os.getenv('GOOGLE_CLOUD_PROJECT'),
+    location=os.getenv('GOOGLE_CLOUD_LOCATION'),
+    agent_engine_id=os.getenv('AGENT_ENGINE_ID'),
+)
 
 # Callback to auto-save session to memory after each interaction
-async def auto_save_session_to_memory_callback(callback_context: CallbackContext):
-    if (
-        callback_context._invocation_context.memory_service is not None
-        and callback_context._invocation_context.session is not None
-    ):
-        await callback_context._invocation_context.memory_service.add_session_to_memory(
-            callback_context._invocation_context.session
-        )
+async def auto_save_to_memory_callback(callback_context):
+    await memory_bank_service.add_session_to_memory(
+        callback_context._invocation_context.session
+    )
+    print("\n****Triggered memory generation****\n")
+
+
 
 
 #Agent Definitions
@@ -278,7 +284,7 @@ root_agent = Agent(
     send the task over to the 'sar_agent' sub-agent to handle the SAR drafting and PDF generation.
     """,
     tools=[PreloadMemoryTool(), mcp_tools],
-    after_agent_callback=auto_save_session_to_memory_callback,
+    after_agent_callback=auto_save_to_memory_callback,
     before_tool_callback=check_token,
     sub_agents=[sar_agent],
     )
