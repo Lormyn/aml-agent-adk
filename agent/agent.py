@@ -116,7 +116,6 @@ pdf_tool = FunctionTool(
 )
 
 
-
 # Application Integration Tool for sending emails
 integration_tool = ApplicationIntegrationToolset(
         project=os.getenv('GOOGLE_CLOUD_PROJECT'),
