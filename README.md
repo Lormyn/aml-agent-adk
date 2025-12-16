@@ -1,122 +1,323 @@
-# Definition
+# AML Agent
 
-This project implements an AI-powered assistant for Anti-Money Laundering (AML) analysts at "Swedish Bank AB". The system is built using the Google Agent Development Kit (ADK) and is designed to streamline the investigation and reporting of suspicious financial activities.
+An AI-powered assistant for Anti-Money Laundering (AML) analysts, built with the Google Agent Development Kit (ADK). This agent streamlines investigation and reporting of suspicious financial activities.
 
+## Features
 
+- 🔍 **Investigation Tools**: Query user profiles, transactions, and risk scores from BigQuery
+- 📊 **Alert Triage**: View and prioritize high-severity alerts
+- 🕸️ **Money Flow Tracing**: Track funds across multiple hops to identify mule rings
+- 📝 **SAR Generation**: Draft and export Suspicious Activity Reports as PDF
+- 🧠 **Memory Bank**: Persistent memory across sessions (when deployed to Agent Engine)
 
-# Setup
+---
 
-Create a `.env` file in the `aml_agent` directory to store the below variables (which you need to set). 
+## Prerequisites
 
-Keep in mind you also need to configure your MCP server and tools to read from your BigQuery dataset & tables in order for the agent to run.
+- Python 3.11+
+- Google Cloud project with Vertex AI API enabled
+- [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed
+- [ADK](https://google.github.io/adk-docs/) installed (`pip install google-adk`)
 
+---
+
+## Quick Start
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Lormyn/aml-agent-adk.git
+cd aml-agent-adk
 ```
-GOOGLE_GENAI_USE_VERTEXAI=1
-GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
-GOOGLE_CLOUD_LOCATION="YOUR_PROJECT_LOCATION"
 
-BIGQUERY_PROJECT="YOUR_BQ_ID"
-BIGQUERY_LOCATION="YOUR_BQ_LOCATION"
+### 2. Create a virtual environment
 
-AGENT_ENGINE_ID="Only available after deploying agent to Agent Engine"
-
-OAUTH_CLIENT_ID="Requires setting up an OAuth profile in GCP"
-OAUTH_CLIENT_SECRET="Requires setting up an OAuth profile in GCP"
-
-MCP_URL="Requires deploying your MCP server to Cloud Run"
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r agent/requirements.txt
 ```
 
-
-
-# Agents
-
-The system consists of two main agents:
-
-1.  **`root_agent`**: The primary assistant for an AML analyst. It can perform initial investigations by looking up user information from a BigQuery backend.
-2.  **`sar_agent`**: A specialized sub-agent responsible for drafting and generating Suspicious Activity Reports (SARs) in PDF format.
-
-The `root_agent` is the main entry point for the analyst. Its primary responsibilities are:
-
-*   **Initial Investigation**: It uses a set of tools to query a BigQuery dataset for user information, including risk scores, transaction data, and KYC (Know Your Customer) details.
-*   **Presenting Findings**: It presents the gathered information to the analyst in a clear and concise manner.
-*   **Delegation**: If the analyst decides that a SAR is warranted, the `root_agent` delegates the task of drafting the report to the `sar_agent`.
-
-The `sar_agent` is a specialized agent focused on the creation of SARs. Its workflow is as follows:
-
-1.  **User Identification**: It identifies the user ID for whom the SAR is being created.
-2.  **Data Gathering**: It uses the available tools to gather all necessary information about the user.
-3.  **Narrative Drafting**: It drafts a comprehensive SAR narrative based on the gathered data.
-4.  **PDF Generation**: It can generate a PDF version of the SAR for download.
-
-
-
-
-# Tools
-
-The agents have access to a variety of tools to perform their functions. These tools are defined in `mcp_server/tools.yaml`.
-
-These tools query the output of an AML risk model.
-
-*   `get-user-full-report`: Retrieves all features and the final risk assessment for a specific user.
-*   `get-top-n-risk-users`: Lists the top N users with the highest risk scores.
-*   `find-flags-high-deposits`: Identifies users with unusually large single-day deposit volumes.
-*   `new-account-international-risk`: Finds new accounts with a high number of international transfers.
-
-These tools query the KYC (Know Your Customer) data.
-
-*   `get-user-kyc-details`: Retrieves all available KYC details for a specific user.
-*   `find-users-by-occupation`: Finds all users with a specific occupation.
-*   `get-potential-pep-matches`: Retrieves a list of users flagged as Politically Exposed Persons (PEPs).
-*   `find-users-by-birth-year-range`: Identifies users born within a specified year range.
-
-Other tools:
-
-*   **`pdf_tool`**: A custom python function that allows the `sar_agent` to generate a PDF report.
-*   **`integration_tool`**: A tool for sending an email summary of the conversation. Built using Application Integration in GCP.
-
-
-
-
-# Running the Agent
-
-To interact with the agent, first authenticate to GCP via
+### 3. Authenticate to Google Cloud
 
 ```bash
 gcloud auth application-default login
 ```
 
-Then call ADK's web server via 
+### 4. Configure environment variables
+
+Create a `.env` file in the `agent/` directory:
 
 ```bash
-adk web 
+cp agent/.env.example agent/.env
 ```
 
-(If deployed to Agent Engine) Invoke Agent Engine instance using 
+Edit `agent/.env` with your values (see [Environment Variables](#environment-variables) below).
+
+### 5. Run the agent locally
 
 ```bash
-adk web --session_service_uri=agentengine://projects/PROJECT_ID/locations/LOCATION_ID/reasoningEngines/REASONING_ENGINE_ID
+adk web
 ```
 
-(If deployed to Agent Engine) Leverage Agent Engine Memory Bank using 
+Open http://localhost:8000 in your browser.
+
+---
+
+## Environment Variables
+
+Create `agent/.env` with the following variables:
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `GOOGLE_GENAI_USE_VERTEXAI` | Set to `1` to use Vertex AI | ✅ |
+| `GOOGLE_CLOUD_PROJECT` | Your GCP project ID | ✅ |
+| `GOOGLE_CLOUD_LOCATION` | GCP region (e.g., `us-central1`) | ✅ |
+| `GOOGLE_CLOUD_STAGING_BUCKET` | GCS bucket for deployments (e.g., `gs://my-bucket`) | For deployment |
+| `MCP_URL` | URL of your MCP Toolbox Cloud Run service | ✅ |
+| `AGENT_ENGINE_ID` | Agent Engine ID (after first deployment) | For Memory Bank |
+| `GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY` | Enable telemetry (`true`/`false`) | Optional |
+
+### Example `.env`
 
 ```bash
-adk web /PATH/TO/YOUR/AGENT/FOLDER --memory_service_uri="agentengine://REASONING_ENGINE_ID"
+GOOGLE_GENAI_USE_VERTEXAI=1
+GOOGLE_CLOUD_PROJECT=my-project-id
+GOOGLE_CLOUD_LOCATION=us-central1
+GOOGLE_CLOUD_STAGING_BUCKET=gs://my-staging-bucket
+
+MCP_URL=https://toolbox-123456789.us-central1.run.app/mcp
+
+# Set after first deployment to Agent Engine
+AGENT_ENGINE_ID=1234567890123456789
+
+GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true
 ```
 
+---
 
+## BigQuery Dataset Setup
 
-# Deployment
+The agent queries data from BigQuery. Sample datasets are provided in the `data/` folder.
 
-To deploy the agent to Agent Engine, use the following command:
+### Included Files
+
+| File | Description |
+|------|-------------|
+| `users.csv` | User profiles with KYC data, risk scores, PEP status |
+| `transactions.csv` | Transaction history between users |
+| `alerts.csv` | AML alerts with severity levels |
+| `schema.sql` | BigQuery table schemas |
+| `generate_data.py` | Script to generate synthetic data |
+
+### Option 1: Upload Existing CSVs (Recommended)
+
+The CSV files are ready to upload directly to BigQuery:
+
+1. Create a dataset in BigQuery:
+   ```bash
+   bq mk --dataset YOUR_PROJECT:aml_dataset
+   ```
+
+2. Load each CSV file:
+   ```bash
+   bq load --source_format=CSV --autodetect \
+     aml_dataset.users data/users.csv
+
+   bq load --source_format=CSV --autodetect \
+     aml_dataset.transactions data/transactions.csv
+
+   bq load --source_format=CSV --autodetect \
+     aml_dataset.alerts data/alerts.csv
+   ```
+
+Or upload via the [BigQuery Console](https://console.cloud.google.com/bigquery) UI.
+
+### Option 2: Generate New Data
+
+To generate fresh synthetic data with custom parameters:
 
 ```bash
-adk deploy agent_engine --project=<YOUR_PROJECT_ID> --region=<YOUR_REGION> --staging_bucket=gs://<YOUR_STAGING_BUCKET> --adk_app=agent --display_name=<YOUR_DISPLAY_NAME> /PATH/TO/YOUR/AGENT/FOLDER
+cd data
+python generate_data.py
 ```
 
+This creates new CSV files that you can then upload to BigQuery.
 
+---
 
+## MCP Toolbox Setup
 
-# Examples
-Ask it to "investigate user U-HR-005" or "show me the top 5 riskiest users". 
+The agent requires an MCP Toolbox deployed to Cloud Run that connects to your BigQuery dataset.
 
-If you want to draft a SAR, you can instruct the agent to do so, and it will delegate the task to the `sar_agent`.
+### 1. Configure `mcp_server/tools.yaml`
+
+Update the BigQuery source configuration:
+
+```yaml
+sources:
+  aml-analysis-data:
+    kind: bigquery
+    project: ${GOOGLE_CLOUD_PROJECT}
+    location: US
+    useClientOAuth: false  # Use service account auth
+```
+
+### 2. Create a secret for tools.yaml
+
+```bash
+gcloud secrets create tools --data-file=mcp_server/tools.yaml
+```
+
+Or update an existing secret:
+
+```bash
+gcloud secrets versions add tools --data-file=mcp_server/tools.yaml
+```
+
+### 3. Deploy the Toolbox to Cloud Run in us-central1
+
+```bash
+export IMAGE=us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:latest
+
+gcloud run deploy toolbox \
+   --image $IMAGE \
+   --service-account toolbox-identity \
+   --region us-central1 \
+   --set-secrets "/mcp_server/tools.yaml=tools:latest" \
+   --args="--tools-file=/mcp_server/tools.yaml","--address=0.0.0.0","--port=8080"
+```
+
+### 4. Required IAM permissions for Service Account
+
+The `toolbox-identity` service account needs:
+
+```bash
+# BigQuery access
+gcloud projects add-iam-policy-binding YOUR_PROJECT \
+  --member="serviceAccount:toolbox-identity@YOUR_PROJECT.iam.gserviceaccount.com" \
+  --role="roles/bigquery.dataViewer"
+
+gcloud projects add-iam-policy-binding YOUR_PROJECT \
+  --member="serviceAccount:toolbox-identity@YOUR_PROJECT.iam.gserviceaccount.com" \
+  --role="roles/bigquery.jobUser"
+
+# Secret access
+gcloud secrets add-iam-policy-binding tools \
+  --member="serviceAccount:toolbox-identity@YOUR_PROJECT.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
+---
+
+## Deployment to Agent Engine
+
+### First-time deployment
+
+```bash
+adk deploy agent_engine \
+  --staging_bucket=gs://YOUR_STAGING_BUCKET \
+  --display_name=aml_agent \
+  agent
+```
+
+**Save the returned Agent Engine ID** and add it to your `.env`:
+```
+AGENT_ENGINE_ID=1234567890123456789
+```
+
+### Update existing deployment
+
+```bash
+adk deploy agent_engine \
+  --staging_bucket=gs://YOUR_STAGING_BUCKET \
+  --agent_engine_id="projects/PROJECT_ID/locations/LOCATION/reasoningEngines/ENGINE_ID" \
+  agent
+```
+
+### Grant Agent Engine access to MCP Toolbox
+
+```bash
+gcloud run services add-iam-policy-binding toolbox \
+  --member="serviceAccount:service-PROJECT_NUMBER@gcp-sa-aiplatform-re.iam.gserviceaccount.com" \
+  --role="roles/run.invoker" \
+  --region=us-central1
+```
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Agent Engine                              │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                     root_agent                           │    │
+│  │  • Investigates alerts                                   │    │
+│  │  • Queries user profiles                                 │    │
+│  │  • Traces money flows                                    │    │
+│  └──────────────────────┬──────────────────────────────────┘    │
+│                         │ delegates                              │
+│  ┌──────────────────────▼──────────────────────────────────┐    │
+│  │                     sar_agent                            │    │
+│  │  • Drafts SAR reports                                    │    │
+│  │  • Generates PDF files                                   │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    MCP Toolbox (Cloud Run)                       │
+│  • get-high-priority-alerts                                      │
+│  • get-user-details                                              │
+│  • trace-money-flow                                              │
+│  • analyze-counterparties                                        │
+│  • get-recent-transactions                                       │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         BigQuery                                 │
+│  • aml_dataset.users                                             │
+│  • aml_dataset.transactions                                      │
+│  • aml_dataset.alerts                                            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Usage Examples
+
+**Investigate an alert:**
+> "Show me the high priority alerts"
+
+**Look up a user:**
+> "Get me details on user U-SE-001"
+
+**Trace money flow:**
+> "Trace the money flow from user U-SE-001"
+
+**Generate a SAR:**
+> "Draft a SAR report for alert ID abc-123"
+
+---
+
+## Troubleshooting
+
+### 401 Unauthorized errors
+- Ensure `gcloud auth application-default login` is completed
+- Check that `useClientOAuth: false` in `mcp_server/tools.yaml`
+
+### 403 Forbidden errors
+- Verify IAM permissions for the Toolbox service account
+- Check Cloud Run invoker permissions for Agent Engine
+
+### 500 Internal Server errors
+- Add `bigquery.jobUser` role to the Toolbox service account
+- Check Cloud Run logs for detailed error messages
+
+---
+
+## License
+
+Apache 2.0
