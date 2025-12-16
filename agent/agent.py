@@ -4,7 +4,7 @@ from google.adk.agents.callback_context import CallbackContext
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StreamableHTTPConnectionParams
 from google.adk.tools.application_integration_tool.application_integration_toolset import ApplicationIntegrationToolset
 from google.genai.types import Part, Blob
-from google.adk.tools import FunctionTool, BaseTool
+from google.adk.tools import FunctionTool
 from typing import Dict, Any
 from fpdf import FPDF
 from google.adk.memory import VertexAiMemoryBankService
@@ -18,47 +18,50 @@ import datetime
 load_dotenv()
 
 
-# OAuth Configuration
-OAUTH_KEY = "temp:token"
+# =============================================================================
+# Authentication Configuration
+# =============================================================================
+# Automatically detect environment: local dev uses ADC tokens, deployed uses
+# Agent Engine's service account (no custom headers needed).
 
-def get_token_from_adc():
-    """ Function to get OAuth token from ADC when running locally (adk web)"""
-    #scopes = ["https://www.googleapis.com/auth/bigquery"]
-    credentials, project_id = google.auth.default()
-    
-    # Force a refresh to get a valid access token.
+def is_running_locally() -> bool:
+    """Detect if we're running locally vs deployed to Agent Engine."""
+    # Agent Engine sets specific env vars; check for their absence
+    return os.getenv("K_SERVICE") is None  # K_SERVICE is set in Cloud Run
+
+
+def get_adc_token() -> str:
+    """Get OAuth token from Application Default Credentials for local dev."""
+    credentials, _ = google.auth.default()
     credentials.refresh(Request())
-    oauth_token = credentials.token
+    if credentials.token is None:
+        raise ValueError(
+            "Failed to get ADC token. Run 'gcloud auth application-default login'."
+        )
+    return credentials.token
 
-    # A quick check to make sure the token isn't None
-    if oauth_token is None:
-        raise ValueError("Failed to retrieve OAuth token from ADC. "
-                        "Make sure you have run 'gcloud auth application-default login'.")
-    return oauth_token
 
-def check_token(tool: BaseTool, args: Dict[str, Any], tool_context: ToolContext): 
-    """Before tool callback to check for OAuth token in context"""
-
-    oauth_token = tool_context.state.get(OAUTH_KEY)
+def mcp_auth_header_provider(context: ToolContext) -> dict:
+    """
+    Provide authentication headers for MCP Toolbox requests.
     
-    if OAUTH_KEY == "temp:token":
-        # local run, add token from adc
-        tool_context.state[OAUTH_KEY] = get_token_from_adc()
-
-    return None
-
-def get_token_from_context(context: ToolContext):
-    oauth_token = context.state.get(OAUTH_KEY)
-    return {"Authorization": f"Bearer {oauth_token}"}
+    - Local dev: Uses ADC token in Authorization header
+    - Deployed: Returns empty dict (Agent Engine uses service account auth)
+    """
+    if is_running_locally():
+        token = get_adc_token()
+        return {"Authorization": f"Bearer {token}"}
+    return {}
 
 
-# MCP Toolset configuration
-port = os.getenv("PORT", "8080")
+# =============================================================================
+# MCP Toolset Configuration
+# =============================================================================
 mcp_tools = MCPToolset(
     connection_params=StreamableHTTPConnectionParams(
-        url = os.getenv('MCP_URL')
+        url=os.getenv('MCP_URL')
     ),
-    header_provider=get_token_from_context,
+    header_provider=mcp_auth_header_provider,
 )
 
 # Function to generate valid PDF bytes from text content
@@ -284,6 +287,5 @@ root_agent = Agent(
     """,
     tools=[PreloadMemoryTool(), mcp_tools],
     after_agent_callback=auto_save_to_memory_callback,
-    before_tool_callback=check_token,
     sub_agents=[sar_agent],
     )

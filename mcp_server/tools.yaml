@@ -3,7 +3,8 @@ sources:
     kind: bigquery
     project: ${GOOGLE_CLOUD_PROJECT}
     location: US
-    useClientOAuth: true
+    # Using service account auth instead of client OAuth for Agent Engine compatibility
+    useClientOAuth: false
 
 tools:
   # ----------------------------------------------------------------------
