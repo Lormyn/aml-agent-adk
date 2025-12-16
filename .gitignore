@@ -146,3 +146,4 @@ cython_debug/
 .gemini
 *.env
 deploy.sh
+.DS_Store
