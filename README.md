@@ -9,6 +9,8 @@ An AI-powered assistant for Anti-Money Laundering (AML) analysts, built with the
 - 🕸️ **Money Flow Tracing**: Track funds across multiple hops to identify mule rings
 - 📝 **SAR Generation**: Draft and export Suspicious Activity Reports as PDF
 - 🧠 **Memory Bank**: Persistent memory across sessions (when deployed to Agent Engine)
+- 🤝 **A2A Support**: Integrated Agent-to-Agent (A2A) protocol for discovery and cross-agent communication
+- ⚡ **Powered by Gemini 3**: Leveraging `gemini-3-flash-preview` for advanced reasoning and extraction
 
 ---
 
@@ -246,26 +248,52 @@ gcloud run services add-iam-policy-binding toolbox \
 
 ---
 
+## A2A Protocol (Agent-to-Agent)
+
+The AML Agent supports the [A2A protocol](https://a2aprotocol.org/), allowing it to be discovered and called by other agents.
+
+### 1. Start the A2A Server
+
+Exposes the agent card and JSON-RPC endpoint on port 9999.
+
+```bash
+python -m agent.a2a.server
+```
+
+Verified at: `http://localhost:9999/.well-known/agent.json`
+
+### 2. Test with Hello Client
+
+A sample client that discovers the AML agent and sends an investigation request.
+
+```bash
+python -m agent.a2a.hello_client
+```
+
+---
+
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Agent Engine                              │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │                     root_agent                           │    │
+│  │                     root_agent                          │    │
+│  │                (Gemini 3 Flash Preview)                  │    │
 │  │  • Investigates alerts                                   │    │
 │  │  • Queries user profiles                                 │    │
 │  │  • Traces money flows                                    │    │
-│  └──────────────────────┬──────────────────────────────────┘    │
-│                         │ delegates                              │
-│  ┌──────────────────────▼──────────────────────────────────┐    │
-│  │                     sar_agent                            │    │
-│  │  • Drafts SAR reports                                    │    │
-│  │  • Generates PDF files                                   │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                             ▼
+│  └──────────────────────┬─────────────┬─────────────────────┘    │
+│                         │             │                          │
+│                         │ delegates   │ A2A Bridge               │
+│  ┌──────────────────────▼───────┐    ┌▼─────────────────────────┐│
+│  │           sar_agent          │    │      A2A Executor        ││
+│  │  • Drafts SAR reports        │    │  (agent/a2a/executor.py) ││
+│  │  • Generates PDF files       │    └┬─────────────────────────┘│
+│  └──────────────────────────────┘     │                          │
+└────────────────────────────┬───────────┼────────────────────────┘
+                             │           │
+                             ▼           ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    MCP Toolbox (Cloud Run)                       │
 │  • get-high-priority-alerts                                      │
