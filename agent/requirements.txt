@@ -3,3 +3,4 @@ google-cloud-aiplatform[adk,agent_engines]
 pytest-asyncio
 pandas
 python-dotenv
+a2a-sdk[http-server]

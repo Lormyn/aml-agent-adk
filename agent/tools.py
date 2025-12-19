@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from google.adk.tools.mcp_tool.mcp_toolset import McpToolset, StreamableHTTPConnectionParams
 from google.adk.tools.application_integration_tool.application_integration_toolset import ApplicationIntegrationToolset
@@ -11,7 +12,8 @@ from typing import Dict, Any
 import google.auth
 from google.auth.transport.requests import Request
 
-load_dotenv()
+# Load .env from the same directory as this module
+load_dotenv(Path(__file__).parent / ".env")
 
 # =============================================================================
 # Authentication Configuration
