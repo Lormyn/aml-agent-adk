@@ -30,14 +30,14 @@ async def auto_save_to_memory_callback(callback_context):
 
 #Agent Definitions
 sar_agent = Agent(
-    model='gemini-3-flash-preview',
+    model='gemini-2.5-flash',
     name='sar_agent',
     instruction=get_sar_agent_instruction(),
     tools=[mcp_tools, pdf_tool, integration_tool],
 )
 
 root_agent = Agent(
-    model='gemini-3-flash-preview',
+    model='gemini-2.5-flash',
     name='aml_agent',
     instruction=get_root_agent_instruction(),
     tools=[PreloadMemoryTool(), mcp_tools],
