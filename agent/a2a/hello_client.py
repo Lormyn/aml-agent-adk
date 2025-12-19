@@ -1,9 +1,9 @@
 """Hello World client that demonstrates A2A communication with the AML agent.
 
-Run with: python -m hello_client
+Run with: python -m agent.a2a.hello_client
 
 Make sure the AML A2A server is running first:
-    python -m agent.a2a_server
+    python -m agent.a2a.server
 """
 
 import asyncio

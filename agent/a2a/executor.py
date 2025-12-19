@@ -8,7 +8,7 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai.types import Content, Part
 
-from .agent import root_agent
+from ..agent import root_agent
 
 
 class AMLAgentExecutor(AgentExecutor):

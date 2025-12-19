@@ -1,6 +1,6 @@
 """A2A Server entry point for the AML agent.
 
-Run with: python -m agent.a2a_server
+Run with: python -m agent.a2a.server
 """
 
 import uvicorn
@@ -14,7 +14,7 @@ from a2a.types import (
     AgentSkill,
 )
 
-from .a2a_executor import AMLAgentExecutor
+from .executor import AMLAgentExecutor
 
 
 def main():
