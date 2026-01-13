@@ -10,7 +10,6 @@ An AI-powered assistant for Anti-Money Laundering (AML) analysts, built with the
 - 📝 **SAR Generation**: Draft and export Suspicious Activity Reports as PDF
 - 🧠 **Memory Bank**: Persistent memory across sessions (when deployed to Agent Engine)
 - 🤝 **A2A Support**: Integrated Agent-to-Agent (A2A) protocol for discovery and cross-agent communication
-- ⚡ **Powered by Gemini 3**: Leveraging `gemini-3-flash-preview` for advanced reasoning and extraction
 
 ---
 
