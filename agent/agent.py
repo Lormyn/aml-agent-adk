@@ -16,7 +16,7 @@ artifact_service = InMemoryArtifactService()
 # Memory Bank service for persistent memory storage
 memory_bank_service = VertexAiMemoryBankService(
     project=os.getenv('GOOGLE_CLOUD_PROJECT'),
-    location=os.getenv('GOOGLE_CLOUD_LOCATION'),
+    location=os.getenv('INTEGRATION_LOCATION'),
     agent_engine_id=os.getenv('AGENT_ENGINE_ID'),
 )
 
@@ -30,17 +30,17 @@ async def auto_save_to_memory_callback(callback_context):
 
 #Agent Definitions
 sar_agent = Agent(
-    model='gemini-2.5-flash',
+    model='gemini-3-flash-preview',
     name='sar_agent',
     instruction=get_sar_agent_instruction(),
     tools=[mcp_tools, pdf_tool, integration_tool],
 )
 
 root_agent = Agent(
-    model='gemini-2.5-flash',
+    model='gemini-3-flash-preview',
     name='aml_agent',
     instruction=get_root_agent_instruction(),
     tools=[PreloadMemoryTool(), mcp_tools],
-    after_agent_callback=auto_save_to_memory_callback,
+    #after_agent_callback=auto_save_to_memory_callback,
     sub_agents=[sar_agent],
     )

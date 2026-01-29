@@ -50,10 +50,27 @@ def mcp_auth_header_provider(context: ToolContext) -> dict:
 
 
 # =============================================================================
-# MCP Toolset Configuration
+# MCP Toolset Configuration (cached)
 # =============================================================================
 
-mcp_tools = McpToolset(
+class CachedMcpToolset(McpToolset):
+    """
+    Subclass of McpToolset that caches tool definitions to prevent re-fetching
+    from the MCP server on every turn, significantly speeding up execution.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._cached_tools = None
+
+    async def get_tools(self, *args, **kwargs):
+        if self._cached_tools is None:
+            print("[DEBUG] Cache MISS: Fetching tool definitions from MCP server...")
+            self._cached_tools = await super().get_tools(*args, **kwargs)
+        else:
+            print("[DEBUG] Cache HIT: Using cached tool definitions.")
+        return self._cached_tools
+
+mcp_tools = CachedMcpToolset(
     connection_params=StreamableHTTPConnectionParams(
         url=os.getenv('MCP_URL')
     ),
@@ -124,7 +141,7 @@ pdf_tool = FunctionTool(
 # =============================================================================
 integration_tool = ApplicationIntegrationToolset(
         project=os.getenv('GOOGLE_CLOUD_PROJECT'),
-        location=os.getenv('GOOGLE_CLOUD_LOCATION'),
+        location=os.getenv('INTEGRATION_LOCATION'),
         integration="sendEmail",
         triggers=["api_trigger/send_email"],
         tool_instructions="Usable to send an email of a conversation."
