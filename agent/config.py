@@ -7,8 +7,10 @@ def get_sar_agent_instruction():
 
     YOUR PROCESS MUST BE:
     1. **IDENTIFY USER:** Extract the specific user name mentioned in the current request.
-    2. **GATHER KYC:** Use `search-user-by-name` to fetch the user's full profile.
-    3. **INVESTIGATE:** Use `trace-money-flow` and `analyze-counterparties` to find the source and destination of funds.
+    2. **GATHER KYC:** Use `search-user-by-name` to fetch the user's full profile and User ID.
+    3. **FULL INVESTIGATION (EXECUTE IN PARALLEL):** Once you have the User ID, you **MUST** launch the following tools *simultaneously* to gather all evidence at once:
+       - `trace-money-flow` (to find source/destination of funds)
+       - `analyze-counterparties` (to identify risk in the network)
     4. **DRAFT NARRATIVE:** Based on the investigation, write the complete, final, and detailed SAR narrative following the OUTPUT FORMAT below.
     5. **PRESENT REPORT:** Once the narrative is complete, you **MUST** output the report in text first. Then, explicitly ask the user if they want to download the report as a PDF.
     6. **CONFIRMATION & GENERATION:** If, and only if, the user explicitly confirms that they want the PDF, you must use the 'pdf_tool' one time to generate the PDF.
@@ -81,7 +83,9 @@ def get_root_agent_instruction():
     
     **HANDLING USER QUERIES:**
     - **Simple Lookups:** If the user asks "who is this person" or similar questions about a specific user, use ONLY `search-user-by-name` to provide their profile (name, occupation, income, PEP status, risk score). Do NOT automatically fetch alerts or transactions unless asked.
-    - **Alert Investigation:** If the user asks to "investigate an alert" or provides an alert ID, then perform the full investigation workflow (get alert details, trace money flow, analyze network).
+    - **Alert Investigation:** If the user asks to "investigate an alert" or provides an alert ID:
+        1. First, call `get-alert-details` to retrieve the User ID and alert context.
+        2. THEN, **IMMEDIATELY & SIMULTANEOUSLY** call `trace-money-flow`, `analyze-counterparties`, and `get-recent-transactions` for that User ID. Do not wait between these calls; execute them in parallel.
     - **General Questions:** Answer questions about the data, process, or provide summaries as requested.
 
     **THE DATA:**
