@@ -1,0 +1,207 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: lormyn/aml-agent-adk
+    source: https://github.com/lormyn/aml-agent-adk
+    branch: main
+    commit: "8cdea345"
+    scope: [agent/a2a/executor.py, agent/agent.py, agent/config.py, agent/tools.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:53:26Z'
+    url: https://a2as.org/certified/agents/lormyn/aml-agent-adk
+  signatures:
+    digest: sha256:-T7GnWr8Xgvh3vP2BQGUDJ4EUHXPfVN-WqC-bm3SVJQ
+    key: ed25519:EriCik83PngC730pQbkg-bJd3l01tnlceRsy5se_ZwQ
+    sig: ed25519:-6nftSDJ5F-NHNhJPY4Zgv8Q__i3Qjw--_2OFwA4fiCEJcAdoXOo8FIX-e7gfR_lXUG_rA6XST-ugtngY2p1CA
+
+agents:
+  root_agent:
+    type: instance
+    models: [gemini-3-flash-preview]
+    tools: [PreloadMemoryTool, mcp_tools]
+    params:
+      name: aml_agent
+      instruction: get_root_agent_instruction()
+      sub_agents: [sar_agent]
+  sar_agent:
+    type: instance
+    models: [gemini-3-flash-preview]
+    tools: [mcp_tools, pdf_tool, integration_tool]
+    params:
+      name: sar_agent
+      instruction: get_sar_agent_instruction()
+
+models:
+  gemini-3-flash-preview:
+    type: literal
+    agents: [sar_agent, root_agent]
+
+tools:
+  integration_tool:
+    type: function
+    agents: [sar_agent]
+  mcp_tools:
+    type: function
+    agents: [sar_agent, root_agent]
+  pdf_tool:
+    type: function
+    agents: [sar_agent]
+
+teams:
+  root_agent:
+    type: hierarchy
+    agents: [root_agent, sar_agent]
+
+imports:
+  A2AStarletteApplication: a2a.server.apps.A2AStarletteApplication
+  Agent: google.adk.agents.Agent
+  AgentCapabilities: a2a.types.AgentCapabilities
+  AgentCard: a2a.types.AgentCard
+  AgentExecutor: a2a.server.agent_execution.AgentExecutor
+  AgentSkill: a2a.types.AgentSkill
+  AMLAgentExecutor: executor.AMLAgentExecutor
+  Any: typing.Any
+  ApplicationIntegrationToolset: google.adk.tools.application_integration_tool.application_integration_toolset.ApplicationIntegrationToolset
+  auth: google.auth
+  Blob: google.genai.types.Blob
+  CallbackContext: google.adk.agents.callback_context.CallbackContext
+  Content: google.genai.types.Content
+  datetime: datetime
+  DefaultRequestHandler: a2a.server.request_handlers.DefaultRequestHandler
+  Dict: typing.Dict
+  EventQueue: a2a.server.events.EventQueue
+  FPDF: fpdf.FPDF
+  FunctionTool: google.adk.tools.FunctionTool
+  get_root_agent_instruction: config.get_root_agent_instruction
+  get_sar_agent_instruction: config.get_sar_agent_instruction
+  InMemoryArtifactService: google.adk.artifacts.InMemoryArtifactService
+  InMemorySessionService: google.adk.sessions.InMemorySessionService
+  InMemoryTaskStore: a2a.server.tasks.InMemoryTaskStore
+  integration_tool: tools.integration_tool
+  load_dotenv: dotenv.load_dotenv
+  mcp_tools: tools.mcp_tools
+  McpToolset: google.adk.tools.mcp_tool.mcp_toolset.McpToolset
+  new_agent_text_message: a2a.utils.new_agent_text_message
+  os: os
+  Part: google.genai.types.Part
+  Path: pathlib.Path
+  pdf_tool: tools.pdf_tool
+  PreloadMemoryTool: google.adk.tools.preload_memory_tool.PreloadMemoryTool
+  Request: google.auth.transport.requests.Request
+  RequestContext: a2a.server.agent_execution.RequestContext
+  root_agent: agent.root_agent
+  Runner: google.adk.runners.Runner
+  StreamableHTTPConnectionParams: google.adk.tools.mcp_tool.mcp_toolset.StreamableHTTPConnectionParams
+  ToolContext: google.adk.tools.tool_context.ToolContext
+  uvicorn: uvicorn
+  VertexAiMemoryBankService: google.adk.memory.VertexAiMemoryBankService
+
+functions:
+  __init__:
+    type: sync
+    module: agent.tools
+    args: [self]
+  auto_save_to_memory_callback:
+    type: async
+    module: agent.agent
+    args: [callback_context]
+  cancel:
+    type: async
+    module: agent.a2a.executor
+    args: [self, context, event_queue]
+    params:
+      returns: None
+  create_pdf_file:
+    type: async
+    module: agent.tools
+    args: [content_to_save, filename, tool_context]
+    params:
+      returns: Dict
+  execute:
+    type: async
+    module: agent.a2a.executor
+    args: [self, context, event_queue]
+    params:
+      returns: None
+  generate_valid_pdf_bytes:
+    type: sync
+    module: agent.tools
+    args: [text_content]
+    params:
+      returns: bytes
+  get_adc_token:
+    type: sync
+    module: agent.tools
+    params:
+      returns: str
+  get_root_agent_instruction:
+    type: sync
+    module: agent.config
+  get_sar_agent_instruction:
+    type: sync
+    module: agent.config
+  get_tools:
+    type: async
+    module: agent.tools
+    args: [self]
+  is_running_locally:
+    type: sync
+    module: agent.tools
+    params:
+      returns: bool
+  main:
+    type: sync
+    module: agent.a2a.server
+  mcp_auth_header_provider:
+    type: sync
+    module: agent.tools
+    args: [context]
+    params:
+      returns: dict
+
+variables:
+  AGENT_ENGINE_ID:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [agent.agent]
+  GOOGLE_CLOUD_PROJECT:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [agent.agent, agent.tools]
+  INTEGRATION_LOCATION:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [agent.agent, agent.tools]
+  K_SERVICE:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [agent.tools]
+  MCP_URL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [agent.tools]
+
+files:
+  .env:
+    type: literal
+    actions: [read]
+    params:
+      path: [Path.parent]
+
+networks:
+  localhost:
+    type: api
+    actions: [GET]
+    urls: [/]
+    protocols: [http]
+    ports: ["9999"]
+    params:
+      caller: [main]
+      links: [url]
